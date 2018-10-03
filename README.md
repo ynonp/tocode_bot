@@ -30,3 +30,10 @@ And run the bot:
 ```
 $ mix run --no-halt
 ```
+
+## Contribute
+Care to help? Want some new functionality for this bot? It's easy.
+
+Most of the relevant code is in the file `lib/app/commands.ex`, just look at the code there and modify or create your own new commands.
+
+You'll probably want to learn some elixir before you do, and this guide is a good place to start: https://elixir-lang.org/getting-started/introduction.html
