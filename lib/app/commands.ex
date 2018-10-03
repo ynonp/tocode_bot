@@ -6,7 +6,6 @@ defmodule App.Commands do
   alias App.Commands.Outside
 
   command ["dad"] do
-    Logger.log :info, "Command /dad"
     url = "https://icanhazdadjoke.com/"
     headers = ["Accept": "text/plain"]
 
@@ -21,7 +20,6 @@ defmodule App.Commands do
   end
 
   command ["daily"] do
-    Logger.log :info, "Command /daily"
     url = "https://www.tocode.co.il/blog"
     headers = ["Accept": "application/json; Charset=utf-8"]
     options = [hackney: [pool: :default]]
@@ -30,11 +28,6 @@ defmodule App.Commands do
          {:ok, appstate} <- Poison.decode(response.body),
          %{ "blog" => %{ "posts" => [%{"href" => href} | _] } } <- appstate do
            send_message "Your daily read: https://www.tocode.co.il#{href}"
-
-
-    else
-      _ ->
-        Logger.log :error, "HTTP error"
     end
   end
 
