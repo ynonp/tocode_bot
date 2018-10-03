@@ -5,6 +5,21 @@ defmodule App.Commands do
 
   alias App.Commands.Outside
 
+  command ["dad"] do
+    Logger.log :info, "Command /dad"
+    url = "https://icanhazdadjoke.com/"
+    headers = ["Accept": "text/plain"]
+
+    case HTTPoison.get(url, headers) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        send_message body
+      {:ok, %HTTPoison.Response{status_code: 404}} ->
+        send_message "404 Not found :("
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.log :info, reason
+    end
+  end
+
   command ["daily"] do
     Logger.log :info, "Command /daily"
     url = "https://www.tocode.co.il/blog"
