@@ -37,3 +37,13 @@ Care to help? Want some new functionality for this bot? It's easy.
 Most of the relevant code is in the file `lib/app/commands.ex`, just look at the code there and modify or create your own new commands.
 
 You'll probably want to learn some elixir before you do, and this guide is a good place to start: https://elixir-lang.org/getting-started/introduction.html
+
+Here are some TODOs for this bot:
+
+1. Reply to /webinar with a link to the next planned webinar
+
+2. Send the /daily link every morning to a group defined in a config file
+
+3. Automatically sign up a user to a webinar (using Zoom API). Remember the email address so users can join more webinars.
+
+4. Connect the bot with Tocode users system, so the bot would be able to bug you about the next lesson you want to take or notify you about new content.
