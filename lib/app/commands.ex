@@ -20,15 +20,8 @@ defmodule App.Commands do
   end
 
   command ["daily"] do
-    url = "https://www.tocode.co.il/blog"
-    headers = ["Accept": "application/json; Charset=utf-8"]
-    options = [hackney: [pool: :default]]
-
-    with {:ok, response} <- HTTPoison.get(url, headers, options),
-         {:ok, appstate} <- Poison.decode(response.body),
-         %{ "blog" => %{ "posts" => [%{"href" => href} | _] } } <- appstate do
-           send_message "Your daily read: https://www.tocode.co.il#{href}"
-    end
+    href = App.Tocode.daily_post_url
+    send_message "Your daily read https://www.tocode.co.il#{href}"
   end
 
   # You can create commands in the format `/command` by

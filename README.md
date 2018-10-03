@@ -16,6 +16,9 @@ config :app,
 
 config :nadia,
   token: "type-here-your-telegram-bot-token"
+
+config :app, group_chat_id: "type-your-group-chat-id-here"
+
 ```
 
 Setup dependencies and compile:

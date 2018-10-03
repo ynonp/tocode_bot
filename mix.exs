@@ -16,7 +16,7 @@ defmodule App.Mixfile do
 
   def application do
     [
-      applications: [:logger, :nadia],
+      applications: [:logger, :nadia, :swarm],
       mod: {App, []}
     ]
   end
@@ -25,7 +25,9 @@ defmodule App.Mixfile do
     [
       {:nadia, "~> 0.4.4"},
       {:httpoison, "~> 1.1.1"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:quantum, "~> 2.3"},
+      {:timex, "~> 3.0"}
     ]
   end
 
