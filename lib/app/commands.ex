@@ -19,6 +19,11 @@ defmodule App.Commands do
     end
   end
 
+  command ["webinar"] do
+    {href, description} = App.Tocode.upcoming_webinar_url
+    send_message "**הוובינר הקרוב בטוקוד**:\n#{description}\n פרטים והצטרפות בקישור:\n#{href}", parse_mode: "Markdown"
+  end
+
   command ["daily"] do
     href = App.Tocode.daily_post_url
     send_message "Your daily read https://www.tocode.co.il#{href}"
