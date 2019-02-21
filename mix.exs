@@ -27,7 +27,8 @@ defmodule App.Mixfile do
       {:httpoison, "~> 1.1.1"},
       {:poison, "~> 3.1"},
       {:quantum, "~> 2.3"},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:floki, "~> 0.20.0"}
     ]
   end
 

@@ -13,6 +13,15 @@ defmodule App.Tocode do
     end
   end
 
+  def publish_daily_post_content do
+    href = App.Tocode.daily_post_url <> "/md"
+    headers = []
+    options = [hackney: [pool: :default]]
+
+    {:ok, response} = HTTPoison.get(href, headers, options)
+    Nadia.send_message("@tocodeil", response.body, parse_mode: "Markdown")
+  end
+
   def upcoming_webinar_url do
     url = "https://www.tocode.co.il/workshops"
     headers = ["Accept": "application/json; Charset=utf-8"]

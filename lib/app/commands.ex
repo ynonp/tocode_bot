@@ -29,6 +29,12 @@ defmodule App.Commands do
     send_message "Your daily read https://www.tocode.co.il#{href}"
   end
 
+  command ["id"] do
+    [_, email] = String.split(update.message.text)
+    uid = update.message.from.id
+    IO.puts "#{uid} -> #{email}"
+  end
+
   # You can create commands in the format `/command` by
   # using the macro `command "command"`.
   command ["hello", "hi"] do
