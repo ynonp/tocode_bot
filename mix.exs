@@ -23,12 +23,12 @@ defmodule App.Mixfile do
 
   defp deps do
     [
-      {:nadia, "~> 0.4.4"},
-      {:httpoison, "~> 1.1.1"},
+      {:nadia, "~> 0.7.0"},
+      {:httpoison, "~> 1.7.0"},
       {:poison, "~> 3.1"},
       {:quantum, "~> 2.3"},
       {:timex, "~> 3.0"},
-      {:floki, "~> 0.20.0"}
+      {:floki, "~> 0.20.0"},
     ]
   end
 

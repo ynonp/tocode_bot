@@ -9,17 +9,28 @@ defmodule App.Tocode do
     with {:ok, response} <- HTTPoison.get(url, headers, options),
          {:ok, appstate} <- Poison.decode(response.body),
          %{ "blog" => %{ "posts" => [%{"href" => href} | _] } } <- appstate do
-           "https://www.tocode.co.il#{href}"
+      "https://www.tocode.co.il#{href}"
     end
   end
 
+  def blog_post_with_iv(url) do
+    "https://t.me/iv?url=#{URI.encode_www_form(url)}&rhash=c8260195ae67de"
+  end
+
   def publish_daily_post_content do
-    href = App.Tocode.daily_post_url <> "/md"
+    post_url = App.Tocode.daily_post_url
+    href = post_url <> "/md"
     headers = []
     options = [hackney: [pool: :default]]
 
     {:ok, response} = HTTPoison.get(href, headers, options)
-    Nadia.send_message("@tocodeil", response.body, parse_mode: "Markdown")
+    Nadia.send_message("@tocodeil", blog_post_with_iv(daily_post_url), parse_mode: "HTML")
+    response.body
+    |> split_long_messages(4000)
+    |> Enum.each(fn chunk ->
+      Nadia.send_message("@tocodeil", chunk, parse_mode: "MarkdownV2")
+      :timer.sleep(200)
+    end)
   end
 
   def upcoming_webinar_url do
@@ -36,7 +47,56 @@ defmodule App.Tocode do
 
   def publish_daily_post_url_to_group() do
     href = App.Tocode.daily_post_url
+           |> App.Tocode.blog_post_with_iv
+
     chat_id = Application.fetch_env!(:app, :group_chat_id)
-    Nadia.send_message(chat_id, "New Post #{href}")
+    Nadia.send_message(chat_id, href)
   end
+
+
+  def break_by(text, []) do
+    { text, "" }
+  end
+
+  def break_by(text, [head | tail]) do
+    if String.contains?(text, head) do
+      parts = text |> String.split(head)
+      {
+        (parts |> Enum.drop(-1) |> Enum.join(head)) <> head,
+        parts |> Enum.take(-1) |> Enum.at(0)
+      }
+
+    else
+      break_by(text, tail)
+    end
+  end
+  
+
+  def split_long_messages(text, max_length) do
+		chunk_fun = fn element, acc ->
+			if String.length(acc) >= max_length do
+        { chunk, rest } = break_by(acc, ["\n", " "])
+        fix_code_blocks(chunk, rest <> element)
+			else
+        {:cont, acc <> element}
+			end
+		end
+
+    after_fun = fn
+      acc -> {:cont, String.trim(acc), ""}
+    end
+
+    Enum.chunk_while(text |> String.graphemes, "", chunk_fun, after_fun)
+  end
+
+  def fix_code_blocks(chunk, acc) do
+    codeblock_count = Regex.scan(~r/```/i, chunk) |> length
+    if rem(codeblock_count, 2) == 0 do
+      { :cont, String.trim(chunk), acc }
+    else
+      { :cont, String.trim(chunk) <> "\n```\n", "\n```\n" <> acc }
+    end
+  end
+
+
 end

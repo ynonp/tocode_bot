@@ -26,7 +26,8 @@ defmodule App.Commands do
 
   command ["daily"] do
     href = App.Tocode.daily_post_url
-    send_message "Your daily read https://www.tocode.co.il#{href}"
+           |> App.Tocode.blog_post_with_iv
+    send_message(href)
   end
 
   command ["id"] do
