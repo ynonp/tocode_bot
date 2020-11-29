@@ -73,14 +73,14 @@ defmodule App.Tocode do
   
 
   def split_long_messages(text, max_length) do
-		chunk_fun = fn element, acc ->
-			if String.length(acc) >= max_length do
+    chunk_fun = fn element, acc ->
+      if String.length(acc) >= max_length do
         { chunk, rest } = break_by(acc, ["\n", " "])
         fix_code_blocks(chunk, rest <> element)
-			else
+      else
         {:cont, acc <> element}
-			end
-		end
+      end
+    end
 
     after_fun = fn
       acc -> {:cont, String.trim(acc), ""}
