@@ -24,11 +24,11 @@ defmodule App.Tocode do
     options = [hackney: [pool: :default]]
 
     {:ok, response} = HTTPoison.get(href, headers, options)
-    Nadia.send_message("@tocodeil", blog_post_with_iv(daily_post_url), parse_mode: "HTML")
+    Nadia.send_message("@tocodeil", blog_post_with_iv(daily_post_url()), parse_mode: "HTML")
     response.body
     |> split_long_messages(4000)
     |> Enum.each(fn chunk ->
-      Nadia.send_message("@tocodeil", chunk, parse_mode: "MarkdownV2")
+      Nadia.send_message("@tocodeil", chunk, parse_mode: "Markdown")
       :timer.sleep(200)
     end)
   end

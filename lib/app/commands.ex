@@ -30,6 +30,23 @@ defmodule App.Commands do
     send_message(href)
   end
 
+  command ["dailypost"] do
+    post_url = App.Tocode.daily_post_url
+    href = post_url <> "/md"
+    headers = []
+    options = [hackney: [pool: :default]]
+
+    {:ok, response} = HTTPoison.get(href, headers, options)
+    response.body
+    |> App.Tocode.split_long_messages(4000)
+    |> Enum.each(fn chunk ->
+      IO.puts("Sending...")
+      IO.inspect(chunk)
+      send_message(chunk, parse_mode: "Markdown")
+      :timer.sleep(200)
+    end)
+  end
+
   command ["id"] do
     [_, email] = String.split(update.message.text)
     uid = update.message.from.id
