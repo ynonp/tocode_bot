@@ -40,8 +40,6 @@ defmodule App.Commands do
     response.body
     |> App.Tocode.split_long_messages(4000)
     |> Enum.each(fn chunk ->
-      IO.puts("Sending...")
-      IO.inspect(chunk)
       send_message(chunk, parse_mode: "Markdown")
       :timer.sleep(200)
     end)

@@ -13,6 +13,26 @@ defmodule App.Tocode do
     end
   end
 
+  def send_all(messages, chat_id) do
+    results = messages
+              |> Enum.map(fn chunk ->
+                :timer.sleep(200)
+                Nadia.send_message(chat_id, chunk, parse_mode: "Markdown")
+              end)
+
+    had_errors = Enum.find(results, fn
+      {:ok, _} -> false
+      {:error, _} -> true
+    end)
+
+    if had_errors do
+      results
+      |> Enum.filter(fn {status, _} -> status == :ok end)
+      |> Enum.map(fn {:ok, msg} -> msg.message_id end)
+      |> Enum.each(fn msg_id -> Nadia.delete_message(chat_id, msg_id) end)
+    end
+  end
+
   def blog_post_with_iv(url) do
     "https://t.me/iv?url=#{URI.encode_www_form(url)}&rhash=c8260195ae67de"
   end
@@ -27,10 +47,7 @@ defmodule App.Tocode do
     Nadia.send_message("@tocodeil", blog_post_with_iv(daily_post_url()), parse_mode: "HTML")
     response.body
     |> split_long_messages(4000)
-    |> Enum.each(fn chunk ->
-      Nadia.send_message("@tocodeil", chunk, parse_mode: "Markdown")
-      :timer.sleep(200)
-    end)
+    |> send_all("@tocodeil")
   end
 
   def upcoming_webinar_url do
