@@ -43,8 +43,9 @@ defmodule App.Tocode do
     headers = []
     options = [hackney: [pool: :default]]
 
+    Nadia.send_message("@tocodeil", daily_post_url(), parse_mode: "HTML", disable_web_page_preview: true)
+
     {:ok, response} = HTTPoison.get(href, headers, options)
-    Nadia.send_message("@tocodeil", blog_post_with_iv(daily_post_url()), parse_mode: "HTML")
     response.body
     |> split_long_messages(4000)
     |> send_all("@tocodeil")

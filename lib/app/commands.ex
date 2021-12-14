@@ -27,7 +27,7 @@ defmodule App.Commands do
   command ["daily"] do
     href = App.Tocode.daily_post_url
            |> App.Tocode.blog_post_with_iv
-    send_message(href)
+    send_message(href, disable_web_page_preview: true)
   end
 
   command ["dailypost"] do
